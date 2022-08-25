@@ -1,3 +1,28 @@
+# Building for multiple platforms status
+
+
+##### using musl 64
+
+```shell
+$ nix build
+error: builder for '/nix/store/s7fzmnaswifs287kq8axmvbkzma0n6v5-elm-exe-elm-0.19.1.drv' failed with exit code 1;
+       last 10 log lines:
+       > terminal/src/Develop/StaticFiles.hs:91:3: error:
+       >     • Exception when trying to run compile-time code:
+       >         reactor: changeWorkingDirectory: does not exist (No such file or directory)
+       >       Code: (bsToExp =<< runIO Build.buildReactorFrontEnd)
+       >     • In the untyped splice:
+       >         $(bsToExp =<< runIO Build.buildReactorFrontEnd)
+       >    |
+       > 91 |   $(bsToExp =<< runIO Build.buildReactorFrontEnd)
+       >    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       > [131 of 132] Compiling Bump             ( terminal/src/Bump.hs, dist/build/elm/elm-tmp/Bump.o, dist/build/elm/elm-tmp/Bump.dyn_o )
+       For full logs, run 'nix log /nix/store/s7fzmnaswifs287kq8axmvbkzma0n6v5-elm-exe-elm-0.19.1.drv'.
+ ```
+
+
+
+
 # Elm
 
 A delightful language for reliable webapps.
