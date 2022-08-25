@@ -4,7 +4,7 @@
   inputs.nixpkgs.follows = "haskellNix/nixpkgs-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
   outputs = { self, nixpkgs, flake-utils, haskellNix }:
-    flake-utils.lib.eachSystem [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" ] (system:
+    flake-utils.lib.eachSystem [ "aarch64-linux" "aarch64-darwin" "x86_64-linux" ] (system:
       let
         aarch64MultiMusl = haskellNix { pkgs = pkgs.pkgsCross.aarch64-multiplatform-musl; };
         overlays = [ haskellNix.overlay
@@ -18,19 +18,29 @@
                              hlint = {};
                              haskell-language-server = {};
                            };
-                           shell.crossPlatforms = p: [ p.aarch64-multiplatform-musl ];
+                           shell.crossPlatforms = p: [ p.musl64 ];
                          };
                      })
                    ];
         pkgs = import nixpkgs { inherit system overlays; inherit (haskellNix) config; 
                                 nixpkgsArgs = {
-                                  crossSystem = { config = "aarch64-multiplatform-musl"; };
+                                  crossSystem = { config = "musl64"; };
                                 };
                               };
         flake = pkgs.elmProject.flake {};
       in flake // {
-        crossPlatforms = p: [p.aarch64-multiplatform-musl];
-        elmAarch64Multi = pkgs.aarch64-multiplatform-musl.pkgsStatic.haskellPackages.executables.components.exes.elm;
+        crossPlatforms = p: [p.musl64];
+        flkPackages = pkgs;
+        
+        # trying to follow pattern at
+        # https://input-output-hk.github.io/haskell.nix/tutorials/cross-compilation.html
+        # with a couple differences:
+        #
+        # - using a flake
+        # - using pkgsStatic overlay instead of setting static flags manually
+        #
         defaultPackage = pkgs.aarch64-multiplatform-musl.pkgsStatic.haskellPackages.executables.components.exes.elm;
+        elmAarch64Multi = pkgs.aarch64-multiplatform-musl.pkgsStatic.haskellPackages.executables.components.exes.elm;
+        myFlake = flake;
       });
 }
