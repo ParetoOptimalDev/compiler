@@ -6,7 +6,6 @@
   outputs = { self, nixpkgs, flake-utils, haskellNix }:
     flake-utils.lib.eachSystem [ "aarch64-linux" "aarch64-darwin" "x86_64-linux" ] (system:
       let
-        aarch64MultiMusl = haskellNix { pkgs = pkgs.pkgsCross.aarch64-multiplatform-musl; };
         overlays = [ haskellNix.overlay
                      (final: prev: {
                        elmProject =
@@ -31,6 +30,7 @@
       in flake // {
         crossPlatforms = p: [p.musl64];
         flkPackages = pkgs;
+        hnix = haskellNix;
         
         # trying to follow pattern at
         # https://input-output-hk.github.io/haskell.nix/tutorials/cross-compilation.html
@@ -39,8 +39,10 @@
         # - using a flake
         # - using pkgsStatic overlay instead of setting static flags manually
         #
-        defaultPackage = pkgs.aarch64-multiplatform-musl.pkgsStatic.haskellPackages.executables.components.exes.elm;
-        elmAarch64Multi = pkgs.aarch64-multiplatform-musl.pkgsStatic.haskellPackages.executables.components.exes.elm;
+        # defaultPackage = musl64.pkgs.pkgsStatic.haskellPackages.executables.components.exes.elm;
+        # elmAarch64Multi = aarch64MultiMusl.pkgsStatic.haskellPackages.executables.components.exes.elm;
+        defaultPackage = flake.packages."elm:exe:elm";
+        # packages.${system}.default = flake.packages."compiler:exe:compiler";
         myFlake = flake;
       });
 }
