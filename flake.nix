@@ -18,6 +18,12 @@
                              haskell-language-server = {};
                            };
                            shell.crossPlatforms = p: [ p.musl64 ];
+                           modules = [{
+                             packages.elm.package.extraSrcFiles = ["reactor/**"];
+                             packages.elm.components.exes.elm.preBuild = ''
+                               HOME=$(mktemp -d)
+                             '';
+                           }];
                          };
                      })
                    ];
