@@ -20,7 +20,7 @@ jobs:
 
           run: |
              apk add --no-cache ghc cabal wget musl-dev zlib-dev zlib-static ncurses-dev ncurses-static
-	     pwd
-	     cabal update
-	     cabal build --ghc-option=-optl=-static --ghc-option=-split-sections
-	     cp -v ./dist-newstyle/build/aarch64-linux/ghc-*/elm-*/x/elm/build/elm/elm /usr/local/bin/elm
+             pwd
+             cabal update
+             cabal build --ghc-option=-optl=-static --ghc-option=-split-sections
+             cp -v ./dist-newstyle/build/aarch64-linux/ghc-*/elm-*/x/elm/build/elm/elm /usr/local/bin/elm
